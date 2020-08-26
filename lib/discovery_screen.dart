@@ -14,8 +14,7 @@ class DiscoveryPage extends StatefulWidget {
 }
 
 class _DiscoveryPage extends State<DiscoveryPage> {
-  /*var counterStream =
-      Stream<int>.periodic(Duration(seconds: 60), (x) => x).take(15);*/
+  
   Timer _timer;
   StreamSubscription<BluetoothDiscoveryResult> _streamSubscription;
   List<BluetoothDiscoveryResult> results = List<BluetoothDiscoveryResult>();
@@ -72,7 +71,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
 
   @override
   void dispose() {
-    // Avoid memory leak (`setState` after dispose) and cancel discovery
+    
     _streamSubscription?.cancel();
     _timer?.cancel();
     super.dispose();
@@ -130,17 +129,6 @@ class _DiscoveryPage extends State<DiscoveryPage> {
               ),
             ),
     );
-    /*ValueTile("Les gens près de chez vous", results.length.toString(),
-        iconData: IconData(59475, fontFamily: 'MaterialIcons'));*/
-    /*Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-          Icon(Icons.person),
-          Text(
-            ": " + ,
-            style: TextStyle(fontWeight: FontWeight.w200, fontSize: 25),
-          ),
-        ]));*/
+    
   }
 }

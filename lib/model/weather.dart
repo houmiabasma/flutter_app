@@ -20,7 +20,7 @@ class Weather {
   Temperature maxTemperature;
   Temperature minTemperature;
 
-  List<Weather> forecast;
+
 
   Weather(
       {this.id,
@@ -35,8 +35,7 @@ class Weather {
       this.windSpeed,
       this.temperature,
       this.maxTemperature,
-      this.minTemperature,
-      this.forecast});
+      this.minTemperature});
 
   static Weather fromJson(Map<String, dynamic> json) {
     final weather = json['weather'][0];
@@ -57,19 +56,7 @@ class Weather {
     );
   }
 
-  static List<Weather> fromForecastJson(Map<String, dynamic> json) {
-    final weathers = List<Weather>();
-    for (final item in json['list']) {
-      weathers.add(Weather(
-          time: item['dt'],
-          temperature: Temperature(intToDouble(
-            item['main']['temp'],
-          )),
-          iconCode: item['weather'][0]['icon']
-      ));
-    }
-    return weathers;
-  }
+  
 
   IconData getIconData(){
     switch(this.iconCode){

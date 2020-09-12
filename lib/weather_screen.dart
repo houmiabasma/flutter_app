@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_app/api/api_keys.dart';
 import 'package:flutter_bluetooth_app/api/weather_api_client.dart';
@@ -24,6 +25,7 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen>
     with TickerProviderStateMixin {
+  
   WeatherBloc _weatherBloc;
   String _cityName = 'bengaluru';
   AnimationController _fadeController;

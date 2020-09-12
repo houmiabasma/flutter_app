@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_app/model/weather.dart';
 import 'package:flutter_bluetooth_app/widgets/current_conditions.dart';
@@ -6,6 +7,7 @@ import 'package:intl/intl.dart';
 
 class WeatherWidget extends StatelessWidget {
   final Weather weather;
+  CollectionReference _weather = FirebaseFirestore.instance.collection('weather');
 
   WeatherWidget({this.weather}) : assert(weather != null);
 

@@ -19,10 +19,10 @@ class DiscoveryPage extends StatefulWidget {
 }
 
 class _DiscoveryPage extends State<DiscoveryPage> {
-  
-  CollectionReference discoveries = FirebaseFirestore.instance.collection('discoveries');
- final Geolocator _geolocator= Geolocator();
- Position _position ;
+  CollectionReference discoveries =
+      FirebaseFirestore.instance.collection('discoveries');
+  final Geolocator _geolocator = Geolocator();
+  Position _position;
   Timer _timer;
   StreamSubscription<BluetoothDiscoveryResult> _streamSubscription;
   List<BluetoothDiscoveryResult> results = List<BluetoothDiscoveryResult>();
@@ -53,7 +53,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
     _startDiscovery();
   }
 
- _getCurrentLocation() async {
+  _getCurrentLocation() async {
     await _geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) async {
@@ -66,7 +66,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
     });
   }
 
-  _startDiscovery()async{
+  _startDiscovery() async {
     _streamSubscription =
         FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
       setState(() {
@@ -77,21 +77,19 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         }
       });
     });
-    _streamSubscription.onDone(() {
+    _streamSubscription.onDone(() async {
       setState(() {
         isDiscovering = false;
       });
-    });
-
-    await _getCurrentLocation();
-    String date =DateFormat.yMd().add_jm().format(new DateTime.now());
-
-    discoveries.add({
-     'date' :date,
-     'latitude':_position.latitude,
-     'longtitude':_position.longitude,
-      'nearby':results.length,
-
+      await _getCurrentLocation();
+      String date = DateFormat.yMd().add_jm().format(new DateTime.now());
+      print(results.length);
+      discoveries.add({
+        'date': date,
+        'latitude': _position.latitude,
+        'longtitude': _position.longitude,
+        'nearby': results.length,
+      });
     });
   }
 

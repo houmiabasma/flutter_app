@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bluetooth_app/widgets/weather_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum OptionsMenu { changeCity, settings }

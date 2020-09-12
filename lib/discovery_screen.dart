@@ -2,6 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 class DiscoveryPage extends StatefulWidget {
   /// If true, discovery starts on page start, otherwise user must press action button.
@@ -15,6 +20,9 @@ class DiscoveryPage extends StatefulWidget {
 
 class _DiscoveryPage extends State<DiscoveryPage> {
   
+  CollectionReference discoveries = FirebaseFirestore.instance.collection('discoveries');
+ final Geolocator _geolocator= Geolocator();
+ Position _position ;
   Timer _timer;
   StreamSubscription<BluetoothDiscoveryResult> _streamSubscription;
   List<BluetoothDiscoveryResult> results = List<BluetoothDiscoveryResult>();
@@ -25,6 +33,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
   @override
   void initState() {
     super.initState();
+
     isDiscovering = widget.start;
 
     if (isDiscovering) {
@@ -44,7 +53,20 @@ class _DiscoveryPage extends State<DiscoveryPage> {
     _startDiscovery();
   }
 
-  _startDiscovery() {
+ _getCurrentLocation() async {
+    await _geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) async {
+      setState(() {
+        _position = position;
+        print('CURRENT POS: $_position');
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  _startDiscovery()async{
     _streamSubscription =
         FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
       setState(() {
@@ -60,6 +82,17 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         isDiscovering = false;
       });
     });
+
+    await _getCurrentLocation();
+    String date =DateFormat.yMd().add_jm().format(new DateTime.now());
+
+    discoveries.add({
+     'date' :date,
+     'latitude':_position.latitude,
+     'longtitude':_position.longitude,
+      'nearby':results.length,
+
+    });
   }
 
   bool checkIfExist(bool test(BluetoothDiscoveryResult element)) {
@@ -71,7 +104,6 @@ class _DiscoveryPage extends State<DiscoveryPage> {
 
   @override
   void dispose() {
-    
     _streamSubscription?.cancel();
     _timer?.cancel();
     super.dispose();
@@ -82,7 +114,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orangeAccent,
-         title: Text(
+        title: Text(
           "Detection par bluetooth",
         ),
       ),
@@ -129,6 +161,5 @@ class _DiscoveryPage extends State<DiscoveryPage> {
               ),
             ),
     );
-    
   }
 }

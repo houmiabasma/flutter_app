@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "129612308048",
+    "firebase_url": "https://myapp-6054a.firebaseio.com",
+    "project_id": "myapp-6054a",
+    "storage_bucket": "myapp-6054a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129612308048:android:365dda5539b26013cafb55",
+        "android_client_info": {
+          "package_name": "com.example.flutter_bluetooth_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129612308048-icqsieq2a7psohv8vr8r52nhv26a72jq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_bluetooth_app",
+            "certificate_hash": "57f83c7f65f4c5fb5786e30bd67f7ec12e1377a7"
+          }
+        },
+        {
+          "client_id": "129612308048-f6bh95o387iftjgkltnn7ie812ndkskd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz_aFAc4jR7Gfy5CL8KfMrWPSqssv-m58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "129612308048-f6bh95o387iftjgkltnn7ie812ndkskd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

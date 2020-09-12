@@ -7,11 +7,15 @@ import 'package:flutter_bluetooth_app/bloc/weather_event.dart';
 import 'package:flutter_bluetooth_app/bloc/weather_state.dart';
 import 'package:flutter_bluetooth_app/repository/weather_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bluetooth_app/utils/converters.dart';
 import 'package:flutter_bluetooth_app/widgets/weather_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 //import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'model/weather.dart';
 
 enum OptionsMenu { changeCity, settings }
 
@@ -25,12 +29,30 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen>
     with TickerProviderStateMixin {
-  
+  CollectionReference _weather = FirebaseFirestore.instance.collection('weather');
   WeatherBloc _weatherBloc;
-  String _cityName = 'bengaluru';
+  String _cityName = 'kenitra';
   AnimationController _fadeController;
   Animation<double> _fadeAnimation;
-
+   Future<void> addWeather(Weather weather) {
+    // Call the user's CollectionReference to add a new user
+    return _weather
+        .add({
+          'cityName': weather.cityName,
+          'temperature':
+              weather.temperature.as(TemperatureUnit.celsius).round(),
+          'time': DateFormat('yMd')
+              .format(DateTime.fromMillisecondsSinceEpoch(weather.time * 1000)),
+          'sunrise': DateFormat('h:m a').format(
+              DateTime.fromMillisecondsSinceEpoch(weather.sunrise * 1000)),
+          'sunset': DateFormat('h:m a').format(
+              DateTime.fromMillisecondsSinceEpoch(weather.sunset * 1000)),
+          'humidity': weather.humidity.toString() + '%',
+          'windSpeed': weather.windSpeed.toString() + 'm/s',
+        })
+        .then((value) => print("add new weather"))
+        .catchError((error) => print("Failed to add weather: $error"));
+  }
   @override
   void initState() {
     super.initState();
@@ -72,6 +94,7 @@ class _WeatherScreenState extends State<WeatherScreen>
                   this._cityName = weatherState.weather.cityName;
                   _fadeController.reset();
                   _fadeController.forward();
+                  addWeather(weatherState.weather);
                   return WeatherWidget(
                     weather: weatherState.weather,
                   );
@@ -124,6 +147,7 @@ class _WeatherScreenState extends State<WeatherScreen>
   _fetchWeatherWithCity() {
     _weatherBloc.dispatch(FetchWeather(cityName: _cityName));
   }
+
 
   void _showCityChangeDialog() {
     showDialog(

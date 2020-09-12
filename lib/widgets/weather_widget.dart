@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 class WeatherWidget extends StatelessWidget {
   final Weather weather;
-  CollectionReference _weather = FirebaseFirestore.instance.collection('weather');
+  
 
   WeatherWidget({this.weather}) : assert(weather != null);
 

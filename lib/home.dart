@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_app/widgets/main_drawer.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -8,24 +9,9 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: Text('First Screen'),
       ),
+      drawer: MainDrawer(),
       body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            RaisedButton(
-                child: Text('Weather Screen'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/weather');
-                }),
-            Padding(padding: new EdgeInsets.all(10.0)),
-            RaisedButton(
-                child: Text('Discovery screen'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/discovery');
-                }),
-          ],
-        ),
+        
       ),
     );
   }

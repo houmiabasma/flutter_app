@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Anonymous",
+                              "System",
                               style: TextStyle(
                                   fontSize: 19, fontWeight: FontWeight.bold),
                             ),
@@ -221,6 +221,7 @@ class _HomeState extends State<Home> {
   }
 
   getDataList() async {
+    
     return await FirebaseFirestore.instance.collection('crowdSensing').get();
   }
 }

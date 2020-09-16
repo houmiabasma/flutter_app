@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
 
 class DiscoveryPage extends StatefulWidget {
   /// If true, discovery starts on page start, otherwise user must press action button.
@@ -27,6 +25,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
   StreamSubscription<BluetoothDiscoveryResult> _streamSubscription;
   List<BluetoothDiscoveryResult> results = List<BluetoothDiscoveryResult>();
   bool isDiscovering;
+  String _currentAddress;
 
   _DiscoveryPage();
 
@@ -61,6 +60,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         _position = position;
         print('CURRENT POS: $_position');
       });
+      _getAddressFromLatLng();
     }).catchError((e) {
       print(e);
     });
@@ -82,23 +82,38 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         isDiscovering = false;
       });
       await _getCurrentLocation();
-      //  String date = DateFormat.yMd().add_jm().format(new DateTime.now());
-      print(results.length);
-      discoveries.add({
-        'commentaire': 'Les gens près',
-        'date': DateTime.now(),
-        'location': GeoPoint(
-          _position.latitude,
-          _position.longitude,
-        ),
-        'discovery': {
-          'location': _position.toJson(),
-          'latitude': _position.latitude,
-          'longtitude': _position.longitude,
-          'nearby': results.length,
-        }
-      });
+      if (results.length > 5) {
+        print(results.length);
+        discoveries.add({
+          'commentaire': 'Les gens près',
+          'date': DateTime.now(),
+          'location': _currentAddress,
+          'discovery': {
+            'location': _position.toJson(),
+            'latitude': _position.latitude,
+            'longtitude': _position.longitude,
+            'nearby': results.length,
+          }
+        });
+      }
     });
+  }
+
+  _getAddressFromLatLng() async {
+    try {
+      List<Placemark> p = await _geolocator.placemarkFromCoordinates(
+          _position.latitude, _position.latitude);
+
+      Placemark place = p[0];
+
+      setState(() {
+        _currentAddress =
+            "[${_position.latitude != null ? _position.latitude : ''},${_position.latitude != null ? _position.latitude : ''}],${place.country}";
+      });
+      print("$_currentAddress");
+    } catch (e) {
+      print(e);
+    }
   }
 
   bool checkIfExist(bool test(BluetoothDiscoveryResult element)) {

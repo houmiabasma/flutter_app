@@ -17,9 +17,8 @@ class ExampleApplication extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => Home(),
-          '/discovery': (context) => DiscoveryPage(),
+        '/discovery': (context) => DiscoveryPage(),
         '/weather': (context) => WeatherScreen(),
-      
       },
       debugShowCheckedModeBanner: false,
     );

@@ -58,7 +58,8 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CircleAvatar(
-                          backgroundImage: AssetImage("images/anonymous.jpg"),
+                          backgroundColor: Colors.white,
+                          backgroundImage: AssetImage("images/process.png"),
                           radius: 35,
                         ),
                         SizedBox(
@@ -221,7 +222,6 @@ class _HomeState extends State<Home> {
   }
 
   getDataList() async {
-    
     return await FirebaseFirestore.instance.collection('crowdSensing').get();
   }
 }

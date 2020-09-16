@@ -29,30 +29,52 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen>
     with TickerProviderStateMixin {
-  CollectionReference _weather = FirebaseFirestore.instance.collection('weather');
+  CollectionReference _weather =
+      FirebaseFirestore.instance.collection('crowdSensing');
   WeatherBloc _weatherBloc;
   String _cityName = 'kenitra';
   AnimationController _fadeController;
   Animation<double> _fadeAnimation;
-   Future<void> addWeather(Weather weather) {
+  final Geolocator _geolocator = Geolocator();
+  Position _position;
+  _getCurrentLocation() async {
+    await _geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) async {
+      setState(() {
+        _position = position;
+        print('CURRENT POS: $_position');
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future<void> addWeather(Weather weather) {
     // Call the user's CollectionReference to add a new user
     return _weather
         .add({
+          'commentaire': '${weather.cityName}: ${weather.description}',
           'cityName': weather.cityName,
-          'temperature':
-              weather.temperature.as(TemperatureUnit.celsius).round(),
-          'time': DateFormat('yMd')
-              .format(DateTime.fromMillisecondsSinceEpoch(weather.time * 1000)),
-          'sunrise': DateFormat('h:m a').format(
-              DateTime.fromMillisecondsSinceEpoch(weather.sunrise * 1000)),
-          'sunset': DateFormat('h:m a').format(
-              DateTime.fromMillisecondsSinceEpoch(weather.sunset * 1000)),
-          'humidity': weather.humidity.toString() + '%',
-          'windSpeed': weather.windSpeed.toString() + 'm/s',
+          'location': "${weather.cityName}",
+          'date': DateTime.now(),
+          'weather': {
+            'temperature':
+                weather.temperature.as(TemperatureUnit.celsius).round(),
+            'time': DateFormat('yMd').format(
+                DateTime.fromMillisecondsSinceEpoch(weather.time * 1000)),
+            'sunrise': DateFormat('h:m a').format(
+                DateTime.fromMillisecondsSinceEpoch(weather.sunrise * 1000)),
+            'sunset': DateFormat('h:m a').format(
+                DateTime.fromMillisecondsSinceEpoch(weather.sunset * 1000)),
+            'humidity': weather.humidity.toString() + '%',
+            'windSpeed': weather.windSpeed.toString() + 'm/s',
+          }
         })
         .then((value) => print("add new weather"))
         .catchError((error) => print("Failed to add weather: $error"));
   }
+
   @override
   void initState() {
     super.initState();
@@ -147,7 +169,6 @@ class _WeatherScreenState extends State<WeatherScreen>
   _fetchWeatherWithCity() {
     _weatherBloc.dispatch(FetchWeather(cityName: _cityName));
   }
-
 
   void _showCityChangeDialog() {
     showDialog(

@@ -4,30 +4,24 @@ import 'package:flutter_bluetooth_app/discovery_screen.dart';
 import 'package:flutter_bluetooth_app/home.dart';
 import 'package:flutter_bluetooth_app/weather_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(new ExampleApplication());
 }
 
 class ExampleApplication extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(builder: (context, snapshot) {
-      return MaterialApp(
-        initialRoute: '/',
-        routes: {
-          '/': (context) => Home(),
-          '/weather': (context) => WeatherScreen(),
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Home(),
           '/discovery': (context) => DiscoveryPage(),
-        },
-        debugShowCheckedModeBanner: false,
-      );
-    });
+        '/weather': (context) => WeatherScreen(),
+      
+      },
+      debugShowCheckedModeBanner: false,
+    );
   }
-}
-
-enum TabItem {
-  home,
-  info,
 }

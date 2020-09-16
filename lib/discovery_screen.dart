@@ -20,7 +20,7 @@ class DiscoveryPage extends StatefulWidget {
 
 class _DiscoveryPage extends State<DiscoveryPage> {
   CollectionReference discoveries =
-      FirebaseFirestore.instance.collection('discoveries');
+      FirebaseFirestore.instance.collection('crowdSensing');
   final Geolocator _geolocator = Geolocator();
   Position _position;
   Timer _timer;
@@ -82,13 +82,21 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         isDiscovering = false;
       });
       await _getCurrentLocation();
-      String date = DateFormat.yMd().add_jm().format(new DateTime.now());
+      //  String date = DateFormat.yMd().add_jm().format(new DateTime.now());
       print(results.length);
       discoveries.add({
-        'date': date,
-        'latitude': _position.latitude,
-        'longtitude': _position.longitude,
-        'nearby': results.length,
+        'commentaire': 'Les gens près',
+        'date': DateTime.now(),
+        'location': GeoPoint(
+          _position.latitude,
+          _position.longitude,
+        ),
+        'discovery': {
+          'location': _position.toJson(),
+          'latitude': _position.latitude,
+          'longtitude': _position.longitude,
+          'nearby': results.length,
+        }
       });
     });
   }
